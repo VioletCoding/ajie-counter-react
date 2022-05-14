@@ -1,11 +1,9 @@
 {
   "name": "ajie-personal-counter",
-  "description": "美女阿婕专用计数器",
-  "version": "1.0.1",
+  "description": "美女阿婕的专用计数器",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "app:dir": "electron-builder --dir",
-    "app:dist": "electron-builder",
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
     "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
@@ -36,7 +34,7 @@
   },
   "build": {
     "productName": "美女阿婕专用计数器",
-    "appId": "cn.ghw.counter",
+    "appId": "cn.violet.counter",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -98,25 +96,10 @@
       "repo": "electron-react-boilerplate"
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
-  },
   "author": {
     "name": "Violet",
     "email": "1054197367@qq.com",
     "url": ""
-  },
-  "contributors": [
-    {
-      "name": "Violet",
-      "email": "1054197367@qq.com",
-      "url": ""
-    }
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
   },
   "keywords": [
     "electron",
@@ -127,9 +110,9 @@
     "sass",
     "webpack",
     "hot",
-    "reload"
+    "reload",
+    "counter"
   ],
-  "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
   "jest": {
     "testURL": "http://localhost/",
     "testEnvironment": "jsdom",
