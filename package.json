@@ -1,7 +1,7 @@
 {
   "name": "ajie-personal-counter",
   "description": "美女阿婕专用计数器",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "app:dir": "electron-builder --dir",
