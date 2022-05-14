@@ -16,6 +16,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import shortcut from './shortcut';
 
+import { SET_ALWAYS_ON_TOP, SAVE_SHORTCUT_DETECTED } from './channel';
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -113,8 +115,12 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
-app.on('window-all-closed', () => {
+app.on('will-quit', () => {
+  globalShortcut.unregister(shortcut.SAVE);
   globalShortcut.unregisterAll();
+});
+
+app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
@@ -122,14 +128,29 @@ app.on('window-all-closed', () => {
   }
 });
 
+/**
+ * 注册快捷键
+ */
+const registerShortCut = () => {
+  const ret = globalShortcut.register(shortcut.SAVE, () => {
+    mainWindow?.webContents.send(SAVE_SHORTCUT_DETECTED);
+  });
+  if (!ret) {
+    log.error('globalShortcut init failed');
+  } else {
+    log.info('globalShortcut init success');
+  }
+};
+
+/**
+ * 当app准备完成时调用
+ */
 app
   .whenReady()
   .then(() => {
     createWindow();
+    registerShortCut();
 
-    globalShortcut.register(shortcut.SAVE, () => {
-      mainWindow?.webContents.send('save-shortcut-detected');
-    });
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
@@ -138,10 +159,9 @@ app
   })
   .catch(console.log);
 
-ipcMain.on('set-always-on-top', (_event, args) => {
-  if (args[0]) {
-    mainWindow?.setAlwaysOnTop(args[0]);
-  } else {
-    mainWindow?.setAlwaysOnTop(args[0]);
-  }
+/**
+ * 设置窗口置顶，args[0]必须是一个boolean
+ */
+ipcMain.on(SET_ALWAYS_ON_TOP, (_event, args) => {
+  mainWindow?.setAlwaysOnTop(typeof args[0] === 'boolean' ? args[0] : false);
 });
